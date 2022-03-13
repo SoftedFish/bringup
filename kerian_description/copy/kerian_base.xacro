@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<robot name="mbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+<xacro:property name="M_PI" value="3.1415926"/>
+
+<xacro:property name="wheel_radius" value="0.09"/>
+<xacro:property name="wheel_length" value="0.025"/>
+
+<xacro:property name="wheel_joint_x" value="0.35"/>
+<xacro:property name="wheel_joint_y" value="0.25"/>
+<xacro:property name="wheel_joint_z" value="0"/>
+
+<xacro:property name="base_length" value="0.5"/>
+<xacro:property name="base_width" value="0.7"/>
+<xacro:property name="base_height" value="0.04"/>
+
+
+<material name="black">
+	<color rgba="0.1 0.1 0.1 0.90"/>
+</material>
+
+<material name="gray">
+	<color rgba="0.8 0.8 0.8 1"/>
+</material>
+
+<xacro:macro name="wheel" params="prefix reflect_x reflect_y">
+	<joint name="${prefix}_wheel_joint" type="continuous">
+		<origin xyz="${reflect_x*wheel_joint_x} ${reflect_y*wheel_joint_y} ${wheel_joint_z}"></origin>
+		<parent link="base_footprint"></parent>
+		<child link="${prefix}_wheel_link"></child>
+		<axis xyz="0 1 0"/>
+	</joint>
+	
+	<link name="${prefix}_wheel_link">
+		<visual>
+			<origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+			<geometry>
+				<cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+			</geometry>
+			<material name="black"></material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+			</geometry>
+		</collision>
+	</link>
+</xacro:macro>
+
+<xacro:macro name="mbot_base">
+	<link name="base_footprint">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.001 0.001 0.001"/>
+			</geometry>
+		</visual>
+	</link>
+	
+	<joint name="base_footprint_joint" type="fixed">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<parent link="base_footprint"/>
+		<child link="base_link"/>
+	</joint>
+	
+	<link name="base_link">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<box size="${base_width} ${base_length} ${base_height}"/>
+			</geometry>
+			<material name="gray"></material>
+		</visual>
+			
+		<collision>
+			<origin xyz="0 0 0"/>
+			<geometry>
+				<box size="${base_width} ${base_length} ${base_height}"/>
+			</geometry>
+		</collision>
+	</link>
+	
+	<wheel prefix="base_fl" reflect_x="1" reflect_y="1"/>
+	<wheel prefix="base_fr" reflect_x="1" reflect_y="-1"/>
+	<wheel prefix="base_bl" reflect_x="-1" reflect_y="1"/>
+	<wheel prefix="base_br" reflect_x="-1" reflect_y="-1"/>
+</xacro:macro>
+
+</robot>
+

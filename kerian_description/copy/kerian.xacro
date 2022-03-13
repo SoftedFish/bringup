@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot name="kerian" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<xacro:include filename="$(find kerian_description)/urdf/kerian_base.xacro"/>
+	<xacro:include filename="$(find kerian_description)/urdf/laser.xacro"/>
+
+	<xacro:property name="laser_offset_x" value="0.0"/>
+	<xacro:property name="laser_offset_y" value="0"/>
+	<xacro:property name="laser_offset_z" value="0.05"/>
+
+	<mbot_base/>
+	
+
+        <joint name="laser_joint" type="fixed">
+	    <origin xyz="${laser_offset_x} ${laser_offset_y} ${laser_offset_z}" rpy="0 0 0"/>
+	    <parent link="base_footprint"/>
+	    <child link="laser_link"></child>
+        </joint>
+
+<xacro:laser/>
+</robot>
